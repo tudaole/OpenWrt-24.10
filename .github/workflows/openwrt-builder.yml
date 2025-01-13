@@ -10,7 +10,7 @@ env:
   REPO_URL: https://github.com/openwrt/openwrt.git
   REPO_BRANCH: master
   CONFIG_FILE: configs/x64_test.config
-  DIY_SCRIPT: diyscript/x64_test-diyscript.sh
+  DIY_SCRIPT: diy/x64_test-diyscript.sh
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: true
   UPLOAD_BIN_DIR: false
