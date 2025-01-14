@@ -14,12 +14,6 @@ sed -i '3 a\\t\t"order": 50,' feeds/luci/applications/luci-app-ttyd/root/usr/sha
 sed -i 's/procd_set_param stdout 1/procd_set_param stdout 0/g' feeds/packages/utils/ttyd/files/ttyd.init
 sed -i 's/procd_set_param stderr 1/procd_set_param stderr 0/g' feeds/packages/utils/ttyd/files/ttyd.init
 
-# bash
-sed -i 's#ash#bash#g' package/base-files/files/etc/passwd
-sed -i '\#export ENV=/etc/shinit#a export HISTCONTROL=ignoredups' package/base-files/files/etc/profile
-mkdir -p files/root
-curl -so files/root/.bash_profile https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/files/raw/branch/main/root/.bash_profile
-curl -so files/root/.bashrc https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/files/raw/branch/main/root/.bashrc
 
 # 移除要替换的包
 rm -rf feeds/packages/net/{xray-core,v2ray-core,v2ray-geodata,sing-box,adguardhome,socat}
@@ -37,54 +31,8 @@ function git_sparse_clone() {
   cd .. && rm -rf $repodir
 }
 
-# golong1.23依赖
-#git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/packages_lang_golang -b 23.x feeds/packages/lang/golang
-
-# SSRP & Passwall
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/openwrt_helloworld.git package/helloworld -b v5
-
-# Alist
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-alist package/alist
-
-# Mosdns
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-mosdns.git -b v5 package/mosdns
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/v2ray-geodata.git package/v2ray-geodata
-
-# Realtek 网卡 - R8168 & R8125 & R8126 & R8152 & R8101
-rm -rf package/kernel/r8168 package/kernel/r8101 package/kernel/r8125 package/kernel/r8126
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/package_kernel_r8168 package/kernel/r8168
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/package_kernel_r8152 package/kernel/r8152
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/package_kernel_r8101 package/kernel/r8101
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/package_kernel_r8125 package/kernel/r8125
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/package_kernel_r8126 package/kernel/r8126
-
-# Adguardhome
-git_sparse_clone master https://github.com/kenzok8/openwrt-packages adguardhome luci-app-adguardhome
-
-# iStore
-git_sparse_clone main https://github.com/linkease/istore-ui app-store-ui
-git_sparse_clone main https://github.com/linkease/istore luci
-
-# Docker
-rm -rf feeds/luci/applications/luci-app-dockerman
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-dockerman -b 24.10 feeds/luci/applications/luci-app-dockerman
-rm -rf feeds/packages/utils/{docker,dockerd,containerd,runc}
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/packages_utils_docker feeds/packages/utils/docker
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/packages_utils_dockerd feeds/packages/utils/dockerd
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/packages_utils_containerd feeds/packages/utils/containerd
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/packages_utils_runc feeds/packages/utils/runc
-sed -i '/sysctl.d/d' feeds/packages/utils/dockerd/Makefile
-pushd feeds/packages
-    curl -s https://init.cooluc.com/openwrt/patch/docker/0001-dockerd-fix-bridge-network.patch | patch -p1
-    curl -s https://init.cooluc.com/openwrt/patch/docker/0002-docker-add-buildkit-experimental-support.patch | patch -p1
-    curl -s https://init.cooluc.com/openwrt/patch/docker/0003-dockerd-disable-ip6tables-for-bridge-network-by-defa.patch | patch -p1
-popd
-
-# UPnP
-rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/miniupnpd feeds/packages/net/miniupnpd -b v2.3.7
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-upnp feeds/luci/applications/luci-app-upnp -b master
+# gxnas-package
+git clone https://github.com/gxnas/OpenWrt_Build_x64_Packages packages/gxnas-package
 
 # fstools
 rm -rf package/system/fstools
@@ -97,14 +45,11 @@ git clone https://github.com/sbwml/package_utils_util-linux -b openwrt-24.10 pac
 # Lucky
 git clone --depth=1 https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-lucky package/luci-app-lucky
 
-# Zero-package
-git clone --depth=1 https://github.com/oppen321/Zero-package package/Zero-package
-
 # 一键配置拨号
 git clone --depth=1 https://github.com/sirpdboy/luci-app-netwizard package/luci-app-netwizard
 
 # 在线更新
-git clone --depth=1 https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-gpsysupgrade package/luci-app-gpsysupgrade
+git clone --depth=1 https://github.com/gxnas/luci-app-gpsysupgrade package/luci-app-gpsysupgrade
 
 # 修改名称
 sed -i 's/OpenWrt/OpenWrt-GXNAS/' package/base-files/files/bin/config_generate
@@ -112,21 +57,6 @@ sed -i 's/OpenWrt/OpenWrt-GXNAS/' package/base-files/files/bin/config_generate
 # 自定义设置
 cp -f $GITHUB_WORKSPACE/diy/banner package/base-files/files/etc/banner
 
-# default settings
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/default-settings package/new/default-settings -b openwrt-24.10
-
-# Theme
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-theme-argon.git package/new/luci-theme-argon
-cp -f $GITHUB_WORKSPACE/images/bg.webp package/new/luci-theme-argon/luci-theme-argon/htdocs/luci-static/argon/img/bg.webp
-
-# OpenAppFilter
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/OpenAppFilter --depth=1 package/OpenAppFilter
-
-# luci-app-partexp
-git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp package/luci-app-partexp
-
-# luci-app-webdav
-git clone https://$GIT_USERNAME:$GIT_PASSWORD@git.kejizero.online/zhao/luci-app-webdav package/new/luci-app-webdav
 
 # FullCone module
 git clone https://git.cooluc.com/sbwml/nft-fullcone package/new/nft-fullcone
