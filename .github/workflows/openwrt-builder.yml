@@ -3,12 +3,12 @@ name: 编译OpenWrt_2410_x64_test
 on:
 #  repository_dispatch:
   workflow_dispatch:
-#  schedule:
-#    - cron: 0 19 * * *
+  schedule:
+    - cron: 30 0 * * *
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: master
+  REPO_BRANCH: openwrt-24.10
   CONFIG_FILE: configs/x64_test.config
   DIY_SCRIPT: diy/x64_test-diyscript.sh
   CLASH_KERNEL: amd64
