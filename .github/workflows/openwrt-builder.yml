@@ -175,7 +175,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && env.FIRMWARE_RELEASE == 'true' && !cancelled()
       with:
-        name: ${{ env.DATE }}_${{ env.FIRMWARE_TAG }}_${{ env.VERSION }}
+        name: ${{ env.FILE_NAME }}_${{ env.VERSION }}-${{ env.DATE }}
         path: ./firmware/*.*
 
     - name: 生成releases发布标签
