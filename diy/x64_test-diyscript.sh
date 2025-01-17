@@ -93,7 +93,7 @@ sed -i 's/Variable1 = "*.*"/Variable1 = "tudaole"/g' package/luci-app-gpsysupgra
 sed -i 's/Variable2 = "*.*"/Variable2 = "OpenWrt-24.10"/g' package/luci-app-gpsysupgrade/luasrc/model/cbi/gpsysupgrade/sysupgrade.lua
 sed -i 's/Variable3 = "*.*"/Variable3 = "x86_64"/g' package/luci-app-gpsysupgrade/luasrc/model/cbi/gpsysupgrade/sysupgrade.lua
 sed -i 's/Variable4 = "*.*"/Variable4 = "6.6"/g' package/luci-app-gpsysupgrade/luasrc/model/cbi/gpsysupgrade/sysupgrade.lua
-sed -i 's/Variable1 = "*.*"/Variable1 = "oppen321"/g' package/luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
+sed -i 's/Variable1 = "*.*"/Variable1 = "tudaole"/g' package/luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
 sed -i 's/Variable2 = "*.*"/Variable2 = "OpenWrt-24.10"/g' package/luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
 sed -i 's/Variable3 = "*.*"/Variable3 = "x86_64"/g' package/luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
 sed -i 's/Variable4 = "*.*"/Variable4 = "6.6"/g' package/luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
