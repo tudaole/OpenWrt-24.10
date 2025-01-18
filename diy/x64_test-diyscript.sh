@@ -35,6 +35,57 @@ function git_sparse_clone() {
 # gxnas-package
 git clone https://github.com/gxnas/OpenWrt_Build_x64_Packages packages/gxnas-package
 
+# 修改 argon 为默认主题
+sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
+sed -i 's/Bootstrap theme/Argon theme/g' feeds/luci/collections/*/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/*/Makefile
+
+# luci-app-adbyby-plus
+rm -rf feeds/packages/net/adbyby-plus
+rm -rf feeds/luci/applications/luci-app-adbyby-plus
+git clone https://github.com/kiddin9/kwrt-packages
+mkdir -p package/luci-app-adbyby-plus
+mv kwrt-packages/luci-app-adbyby-plus package/luci-app-adbyby-plus
+rm -rf kwrt-packages
+
+# frpc frps
+rm -rf feeds/luci/applications/{luci-app-frpc,luci-app-frps,luci-app-hd-idle,luci-app-adblock,luci-app-filebrowser}
+merge_package master https://github.com/immortalwrt/luci package/custom applications/luci-app-filebrowser applications/luci-app-syncdial applications/luci-app-eqos applications/luci-app-nps applications/luci-app-nfs applications/luci-app-frpc applications/luci-app-frps applications/luci-app-hd-idle applications/luci-app-adblock applications/luci-app-socat
+
+# homeproxy
+git clone --depth=1 https://github.com/muink/luci-app-homeproxy.git package/luci-app-homeproxy
+
+# mihomo
+git clone --depth=1 https://github.com/morytyann/OpenWrt-mihomo package/luci-app-mihomo
+
+# mosdns
+rm -rf feeds/packages/net/mosdns
+rm -rf feeds/luci/applications/luci-app-mosdns
+git clone --depth=1 -b v5 https://github.com/sbwml/luci-app-mosdns package/luci-app-mosdns
+
+# passwall
+rm -rf feeds/luci/applications/luci-app-passwall
+merge_package main https://github.com/xiaorouji/openwrt-passwall package/custom luci-app-passwall
+
+# passwall2
+# merge_package main https://github.com/xiaorouji/openwrt-passwall2 package/custom luci-app-passwall2
+
+# openclash
+rm -rf feeds/luci/applications/luci-app-openclash
+merge_package master https://github.com/vernesong/OpenClash package/custom luci-app-openclash
+# merge_package dev https://github.com/vernesong/OpenClash package/custom luci-app-openclash
+# 编译 po2lmo (如果有po2lmo可跳过)
+pushd package/custom/luci-app-openclash/tools/po2lmo
+make && sudo make install
+popd
+
+# argon 主题
+rm -rf feeds/luci/themes/luci-theme-argon
+rm -rf feeds/luci/applications/luci-app-argon-config
+git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
+git clone --depth=1 -b js https://github.com/lwb1978/luci-theme-kucat package/luci-theme-kucat
+
 # fstools
 rm -rf package/system/fstools
 git clone https://github.com/sbwml/package_system_fstools -b openwrt-24.10 package/system/fstools
@@ -58,6 +109,15 @@ sed -i 's/OpenWrt/OpenWrt-GXNAS/' package/base-files/files/bin/config_generate
 # 自定义设置
 cp -f $GITHUB_WORKSPACE/diy/banner package/base-files/files/etc/banner
 
+# 显示增加编译时间
+sed -i "s/DISTRIB_REVISION='R[0-9]\+\.[0-9]\+\.[0-9]\+'/DISTRIB_REVISION='@R$build_date'/g" package/lean/default-settings/files/zzz-default-settings
+sed -i 's/LEDE/OpenWrt_2305_x64_全功能版 by GXNAS build/g' package/lean/default-settings/files/zzz-default-settings
+
+# 修改右下角脚本版本信息
+sed -i 's/<a class=\"luci-link\" href=\"https:\/\/github.com\/openwrt\/luci\" target=\"_blank\">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)<\/a>/OpenWrt_2305_x64_全功能版 by GXNAS build @R'"$build_date"'/' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i 's|<a href="https://github.com/jerrykuku/luci-theme-argon" target="_blank">ArgonTheme <%# vPKG_VERSION %></a>|<a class="luci-link" href="https://wp.gxnas.com" target="_blank">🌐固件编译者：【GXNAS博客】</a>|' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i 's|<%= ver.distversion %>|<a href="https://d.gxnas.com" target="_blank">👆点这里下载最新版本</a>|' package/luci-theme-argon/luasrc/view/themes/argon/footer.htm
+sed -i "/<a class=\"luci-link\"/d; /<a href=\"https:\/\/github.com\/jerrykuku\/luci-theme-argon\"/d; s|<%= ver.distversion %>|OpenWrt_2305_x64_全功能版 by GXNAS build @R$build_date|" package/luci-theme-argon/luasrc/view/themes/argon/footer_login.htm
 
 # FullCone module
 git clone https://git.cooluc.com/sbwml/nft-fullcone package/new/nft-fullcone
